@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  zk1:
+    build: ./zookeeper
+    restart: always
+    hostname: zk1
+    ports:
+      - 2181:2181
+      - 8080:8080
+    volumes:
+      - ./volumes/zk1/data:/data
+      - ./volumes/zk1/datalog:/datalog
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zk1:2888:3888;2181 server.2=zk2:2888:3888;2181 server.3=zk3:2888:3888;2181
+      ZOO_4LW_COMMANDS_WHITELIST: conf,stat,srvr
+      SERVER_JVMFLAGS: -Dzookeeper.skipACL=yes
+
+  zk2:
+    build: ./zookeeper
+    restart: always
+    hostname: zk2
+    ports:
+      - 2182:2181
+    volumes:
+      - ./volumes/zk2/data:/data
+      - ./volumes/zk2/datalog:/datalog
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zk1:2888:3888;2181 server.2=zk2:2888:3888;2181 server.3=zk3:2888:3888;2181
+      SERVER_JVMFLAGS: -Dzookeeper.skipACL=yes
+
+  zk3:
+    build: ./zookeeper
+    restart: always
+    hostname: zk3
+    ports:
+      - 2183:2181
+    volumes:
+      - ./volumes/zk3/data:/data
+      - ./volumes/zk3/datalog:/datalog
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zk1:2888:3888;2181 server.2=zk2:2888:3888;2181 server.3=zk3:2888:3888;2181
+      SERVER_JVMFLAGS: -Dzookeeper.skipACL=yes
